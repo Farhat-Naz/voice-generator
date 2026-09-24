@@ -1,0 +1,6 @@
+anthropic
+sounddevice
+numpy
+SpeechRecognition
+edge-tts
+pyttsx3
