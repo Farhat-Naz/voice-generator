@@ -16,18 +16,26 @@ function sha(s: string) {
   return createHash("sha256").update(s).digest();
 }
 
-function codeMatches(given: string, expected: string) {
-  return timingSafeEqual(sha(given), sha(expected));
+// ACCESS_CODE may hold several codes separated by commas, so test codes can be
+// handed out and revoked without changing the owner's code.
+function codeMatches(given: string, allowed: string[]) {
+  const g = sha(given);
+  let ok = false;
+  for (const code of allowed) ok = timingSafeEqual(g, sha(code)) || ok;
+  return ok;
 }
 
 export async function POST(req: Request) {
-  const expected = process.env.ACCESS_CODE;
-  if (!expected) {
+  const allowed = (process.env.ACCESS_CODE ?? "")
+    .split(",")
+    .map((c) => c.trim())
+    .filter(Boolean);
+  if (!allowed.length) {
     // Fail closed: never expose a public endpoint that spends API credits.
     if (process.env.NODE_ENV === "production") {
       return Response.json({ error: "Server is missing ACCESS_CODE." }, { status: 500 });
     }
-  } else if (!codeMatches(req.headers.get("x-access-code") ?? "", expected)) {
+  } else if (!codeMatches(req.headers.get("x-access-code") ?? "", allowed)) {
     return Response.json({ error: "Wrong access code." }, { status: 401 });
   }
 
