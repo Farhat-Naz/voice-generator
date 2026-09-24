@@ -1,0 +1,158 @@
+:root {
+  --bg: #f6f7f9;
+  --fg: #16181d;
+  --muted: #666d7a;
+  --card: #ffffff;
+  --border: #dde1e7;
+  --accent: #4f46e5;
+  --user: #e0e7ff;
+  --danger: #c62828;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1115;
+    --fg: #eceef2;
+    --muted: #9aa1ad;
+    --card: #181b21;
+    --border: #2a2e37;
+    --accent: #818cf8;
+    --user: #2a2f55;
+    --danger: #ef7373;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.wrap {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 32px 16px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.sub {
+  color: var(--muted);
+  margin: 6px 0 24px;
+  text-align: center;
+}
+
+.code {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  max-width: 320px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.code input {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--fg);
+  font-size: 1rem;
+}
+
+.mic {
+  margin-top: 28px;
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 2.6rem;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.mic:hover:not(:disabled) {
+  transform: scale(1.04);
+}
+
+.mic:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.mic.listening {
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.mic.thinking {
+  opacity: 0.7;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 50%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 20px transparent;
+  }
+}
+
+.status {
+  margin: 14px 0 0;
+  color: var(--muted);
+  min-height: 1.4em;
+}
+
+.error {
+  color: var(--danger);
+  text-align: center;
+  margin: 12px 0 0;
+}
+
+.chat {
+  width: 100%;
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bubble {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  line-height: 1.4;
+}
+
+.bubble.user {
+  align-self: flex-end;
+  background: var(--user);
+  border-color: transparent;
+}
+
+.bubble.assistant {
+  align-self: flex-start;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mic.listening {
+    animation: none;
+  }
+}
