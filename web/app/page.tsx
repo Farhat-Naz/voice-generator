@@ -40,9 +40,19 @@ export default function Home() {
   useEffect(() => {
     const w = window as AnyRec;
     setSupported(!!(w.SpeechRecognition || w.webkitSpeechRecognition) && !!w.speechSynthesis);
-    try {
-      setCode(localStorage.getItem("access-code") ?? "");
-    } catch {}
+    // A link like /?code=XXXX saves the code on this device, then hides it from the URL.
+    const fromUrl = new URLSearchParams(window.location.search).get("code");
+    if (fromUrl) {
+      setCode(fromUrl);
+      try {
+        localStorage.setItem("access-code", fromUrl);
+      } catch {}
+      window.history.replaceState(null, "", window.location.pathname);
+    } else {
+      try {
+        setCode(localStorage.getItem("access-code") ?? "");
+      } catch {}
+    }
     return () => {
       activeRef.current = false;
       recRef.current?.abort();
